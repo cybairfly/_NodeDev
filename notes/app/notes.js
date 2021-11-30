@@ -1,28 +1,29 @@
 const fs = require('fs');
 
-var fetchNotes = () => {
+const loadNotes = () => {
   try {
-    var oldNotesString = fs.readFileSync('notes-data.json');
-    return JSON.parse(oldNotesString);
+    const oldNotesBuffer = fs.readFileSync('../notes-data.json');
+    const oldNotes = JSON.parse(oldNotesBuffer.toString());
+    return oldNotes;
   }
   catch (e) {
     return [];
   }
 };
 
-var saveNotes = (notes) => {
-  fs.writeFileSync('notes-data.json', JSON.stringify(notes));
+const saveNotes = (notes) => {
+  fs.writeFileSync('../notes-data.json', JSON.stringify(notes));
 };
 
-var addNote = (title, body) => {
+const add = (title, body) => {
   console.log('Adding note:', title, body);
-  var notes = fetchNotes();
-  var note = {
+  const notes = loadNotes();
+  const note = {
     title,
     body
   };
 
-  var duplicateNotes = notes.filter((item) => item.title === title);
+  const duplicateNotes = notes.filter((item) => item.title === title);
 
   if(!duplicateNotes.length) {
     notes.push(note);
@@ -31,32 +32,36 @@ var addNote = (title, body) => {
   }
 };
 
-var remove = (title) => {
+const remove = (title) => {
   console.log('Removing note:', title);
-  var notes = fetchNotes();
-  var filterNotes = notes.filter((item) => item.title !== title);
+  const notes = loadNotes();
+  const filterNotes = notes.filter((item) => item.title !== title);
   saveNotes(filterNotes);
   return notes.length !== filterNotes.length;
 };
 
-var list = () => {
+const list = () => {
   console.log('Listing all notes:');
-  return fetchNotes();
+  const notes = loadNotes();
+  console.log(notes);
+  return notes;
 };
 
-var read = (title) => {
+const read = (title) => {
   console.log('Reading note:', title);
-  var notes = fetchNotes();
-  return notes.filter((item) => item.title === title)[0];
+  const notes = loadNotes();
+  const note = notes.filter((item) => item.title === title)[0];
+  console.log(note);
+  return note;
 };
 
-var note2log = (note) => {
+const note2log = (note) => {
   debugger;
   console.log(note ? `${note.title}, ${note.body}` : 'Note not found.');
 };
 
 module.exports = {
-  addNote,
+  add,
   remove,
   list,
   read,

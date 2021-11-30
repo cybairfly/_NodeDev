@@ -9,7 +9,8 @@
   "author": "Tobey",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^5.0.0",
     "lodash": "^4.17.4",
-    "yargs": "^4.7.1"
+    "yargs": "^17.2.1"
   }
 }
