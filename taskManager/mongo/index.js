@@ -3,6 +3,10 @@ const {MongoClient, ObjectId} = require('mongodb');
 const url = process.env.MONGO_URL;
 const dbName = 'task-manager';
 
+const id = new ObjectId();
+console.log(id.getTimestamp());
+console.log(`ID size is half in binary: ${id.id.length} < ${id.toHexString().length}`);
+
 MongoClient.connect(url, {
     useNewUrlParser: true,
 }, (error, client) => {
