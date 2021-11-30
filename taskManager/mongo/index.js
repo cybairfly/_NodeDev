@@ -15,28 +15,30 @@ MongoClient.connect(url, {
     }
     console.log('Connected to MongoDB server');
 
-    client
-        .db(dbName)
-        .collection('users')
+    const users = client.db(dbName).collection('users');
+    const tasks = client.db(dbName).collection('tasks');
+
+    users
         .insertOne({
             name: 'Tobey',
             age: 33
         }).then(inserted => {
-            client.db(dbName)
-                .collection('users')
+            users
                 .findOne({name: 'Tobey'})
                 .then((verified) => {
                     console.log({inserted, verified});
-                }).catch((error) => {
-                    console.log(error);
                 });
-        }).catch((error) => {
-            console.error(error);
         });
 
-    client
-        .db(dbName)
-        .collection('tasks')
+    users
+        // returns cursor/pointer only for more flexibility/operations
+        .find({name: 'Tobey'})
+        .toArray()
+        .then((results) => {
+            console.log({results});
+        });
+
+    tasks
         .insertMany([
             {
                 task: 'Buy milk',
@@ -50,23 +52,21 @@ MongoClient.connect(url, {
                 task: 'Buy cheese',
                 done: false,
             }
-        ])
-        .then((result) => {
+        ]).then((result) => {
             console.log({result});
-        })
-        .catch((error) => {
-            console.error(error);
         });
 
-    client
-        .db(dbName)
-        .collection('tasks')
+    tasks
         .estimatedDocumentCount()
         .then((count) => {
             console.log({count});
-        })
-        .catch((error) => {
-            console.error(error);
         });
 
+    tasks
+        // returns cursor/pointer only for more flexibility/operations
+        .find({done: false})
+        .count()
+        .then((count) => {
+            console.log({count});
+        });
 });
