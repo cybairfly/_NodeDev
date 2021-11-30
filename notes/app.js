@@ -33,6 +33,8 @@ const yargv = yargs
 .help()
 .argv;
 
+console.log(process.argv);
+
 var command = yargv._[0];
 
 if (command === 'add') {
