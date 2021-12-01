@@ -5,11 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node mongo/index"
+    "start": "node mongoose/index"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mongodb": "^4.2.0"
+    "express": "^4.17.1",
+    "mongodb": "^4.2.0",
+    "mongoose": "^6.0.14",
+    "validator": "^13.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   }
 }

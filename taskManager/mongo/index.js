@@ -1,7 +1,7 @@
 const {MongoClient, ObjectId} = require('mongodb');
 
 const url = process.env.MONGO_URL;
-const dbName = 'task-manager';
+const dbName = 'task-manager-testing';
 
 const id = new ObjectId();
 console.log(id.getTimestamp());
@@ -10,13 +10,16 @@ console.log(`ID size is half in binary: ${id.id.length} < ${id.toHexString().len
 MongoClient.connect(url, {
     useNewUrlParser: true,
 }, (error, client) => {
-    if (error) {
-        return console.log('Unable to connect to DB');
-    }
+    if (error)
+        return console.error('Unable to connect to DB', error);
+
     console.log('Connected to MongoDB server');
 
     const users = client.db(dbName).collection('users');
     const tasks = client.db(dbName).collection('tasks');
+
+    users.drop().catch(() => {});
+    tasks.drop().catch(() => {});
 
     users
         .insertOne({
@@ -24,16 +27,20 @@ MongoClient.connect(url, {
             age: 33
         }).then(inserted => {
             users
-                .findOne({name: 'Tobey'})
-                .then((verified) => {
-                    console.log({inserted, verified});
+                .updateOne({name: 'Tobey'}, {$inc: {age: 1}})
+                .then(updated => {
+                    users
+                        .findOne({name: 'Tobey'})
+                        .then((verified) => {
+                            console.log({inserted, updated, verified});
+                        });
                 });
         });
 
     users
         // returns cursor/pointer only for more flexibility/operations
         .find({name: 'Tobey'})
-        .toArray()
+        .count()
         .then((results) => {
             console.log({results});
         });
@@ -46,15 +53,19 @@ MongoClient.connect(url, {
             },
             {
                 task: 'Buy bread',
-                done: false,
+                done: true,
             },
             {
                 task: 'Buy cheese',
-                done: false,
+                done: true,
             }
-        ]).then((result) => {
-            console.log({result});
-        });
+        ]).then((inserted) => {
+            tasks
+                .updateMany({done: false}, {$set: {done: true}})
+                .then(updated => {
+                    console.log({updated});
+                });
+        })
 
     tasks
         .estimatedDocumentCount()
@@ -64,9 +75,9 @@ MongoClient.connect(url, {
 
     tasks
         // returns cursor/pointer only for more flexibility/operations
-        .find({done: false})
-        .count()
-        .then((count) => {
-            console.log({count});
+        .find({done: true})
+        .toArray()
+        .then((tasks) => {
+            console.log({tasks});
         });
 });
