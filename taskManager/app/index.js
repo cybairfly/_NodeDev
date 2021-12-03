@@ -3,10 +3,9 @@ const express = require('express');
 // requests get stuck w/o this!!!
 const db = require('./db');
 
-const routers = {
-  users: require('./routers/users'),
-  tasks: require('./routers/tasks'),
-}
+const routers = {};
+routers.users = require('./routers/users');
+routers.tasks = require('./routers/tasks');
 
 const app = express();
 
@@ -19,5 +18,5 @@ app.use(routers.tasks);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`Server is up on port ${port}`);
+    console.log(`Server is up on port ${port}`);
 });

@@ -24,14 +24,14 @@ MongoClient.connect(url, {
     users
         .insertOne({
             name: 'Tobey',
-            age: 33
+            age: 33,
         }).then(inserted => {
             users
                 .updateOne({name: 'Tobey'}, {$inc: {age: 1}})
                 .then(updated => {
                     users
                         .findOne({name: 'Tobey'})
-                        .then((verified) => {
+                        .then(verified => {
                             console.log({inserted, updated, verified});
                         });
                 });
@@ -41,7 +41,7 @@ MongoClient.connect(url, {
         // returns cursor/pointer only for more flexibility/operations
         .find({name: 'Tobey'})
         .count()
-        .then((results) => {
+        .then(results => {
             console.log({results});
         });
 
@@ -58,18 +58,18 @@ MongoClient.connect(url, {
             {
                 task: 'Buy cheese',
                 done: true,
-            }
-        ]).then((inserted) => {
+            },
+        ]).then(inserted => {
             tasks
                 .updateMany({done: false}, {$set: {done: true}})
                 .then(updated => {
                     console.log({updated});
                 });
-        })
+        });
 
     tasks
         .estimatedDocumentCount()
-        .then((count) => {
+        .then(count => {
             console.log({count});
         });
 
@@ -77,7 +77,7 @@ MongoClient.connect(url, {
         // returns cursor/pointer only for more flexibility/operations
         .find({done: true})
         .toArray()
-        .then((tasks) => {
+        .then(tasks => {
             console.log({tasks});
         });
 });

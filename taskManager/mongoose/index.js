@@ -25,7 +25,7 @@ const User = mongoose.model('User', {
         validate(value) {
             if (value.toLowerCase().includes('password'))
                 throw new Error('Password cannot contain "password"');
-        }
+        },
     },
     age: {
         type: Number,
@@ -34,7 +34,7 @@ const User = mongoose.model('User', {
         validate(value) {
             if (!value)
                 throw new Error('Age must be a positive number');
-        }
+        },
     },
     mail: {
         type: String,
@@ -44,8 +44,8 @@ const User = mongoose.model('User', {
         validate(value) {
             if (!validator.isEmail(value))
                 throw new Error('Invalid email');
-        }
-    }
+        },
+    },
 });
 
 const user = new User({username: ' Tobey ', password: 'passfork', age: 33, mail: 'TesT@TesT.COM'});
@@ -54,7 +54,7 @@ user
     .save()
     .then(result => {
         console.log('User saved', result);
-    }).catch((error) => {
+    }).catch(error => {
         console.log('Error saving user', error);
     });
 
@@ -76,6 +76,6 @@ task
     .save()
     .then(result => {
         console.log('Task saved', result);
-    }).catch((error) => {
+    }).catch(error => {
         console.log('Error saving task', error);
     });
