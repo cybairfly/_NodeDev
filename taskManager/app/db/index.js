@@ -6,7 +6,7 @@ mongoose.connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     // fix deprecation warnings
-    useFindAndModify: false,
+    // useFindAndModify: false,
 });
 
 mongoose.connection.collection('users').drop().catch(() => {});
