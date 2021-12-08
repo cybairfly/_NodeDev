@@ -1,8 +1,8 @@
+const bcrypt = require('bcrypt');
 const express = require('express');
+const Task = require('../models/task');
 
 const router = express.Router();
-
-const Task = require('../models/task');
 
 router.get('/tasks', (req, res) => {
     Task.find({}).then(tasks => {
@@ -55,8 +55,11 @@ router.patch('/tasks/:name', async (req, res) => {
     if (updateError)
         return res.status(400).send({error: updateError});
 
+    // some mongoose methods skip middleware like password hashing
+    // Task.findOneAndUpdate({name: req.params.name}, req.body, {
+
     Task.findOneAndUpdate({name: req.params.name}, req.body, {
-    // return updated user instead original
+        // return updated user instead original
         new: true,
         // ensure updated user matches original schema
         runValidators: true,
