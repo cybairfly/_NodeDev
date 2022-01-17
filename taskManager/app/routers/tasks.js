@@ -1,11 +1,24 @@
 const bcrypt = require('bcrypt');
 const express = require('express');
+
+const User = require('../models/user');
 const Task = require('../models/task');
+const access = require('../hooks/access');
 
 const router = express.Router();
 
-router.get('/tasks', (req, res) => {
-    Task.find({}).then(tasks => {
+router.get('/tasks', access, async (req, res) => {
+    // alternative solution using references
+    // await req.user
+    //     .populate('tasks')
+    //     .execPopulate();
+
+    // res.send(req.user.tasks);
+
+    Task.find({
+        // reference to user in task model
+        user: req.user._id,
+    }).then(tasks => {
         res.json(tasks);
     }).catch(error => {
         res
@@ -14,24 +27,28 @@ router.get('/tasks', (req, res) => {
     });
 });
 
-router.get('/tasks/:name', (req, res) => {
-    console.log(req.params.name);
-    Task.find({name: req.params.name})
-        .then(task => {
-            if (!task)
-                res.status(404).send('Task not found');
-            else
-                res.json(task);
-        })
-        .catch(error => {
-            res
-                .status(500)
-                .send(error);
-        });
+router.get('/tasks/:name', access, (req, res) => {
+    Task.findOne({
+        name: req.params.name,
+        // reference to user in task model
+        user: req.user._id,
+    }).then(task => {
+        if (!task)
+            res.status(404).send('Task not found');
+        else
+            res.json(task);
+    }).catch(error => {
+        res
+            .status(500)
+            .send(error);
+    });
 });
 
-router.post('/tasks', (req, res) => {
-    const task = new Task(req.body);
+router.post('/tasks', access, (req, res) => {
+    const task = new Task({
+        ...req.body,
+        user: req.user._id,
+    });
 
     task
         .save()
@@ -46,19 +63,22 @@ router.post('/tasks', (req, res) => {
         });
 });
 
-router.patch('/tasks/:name', async (req, res) => {
+router.patch('/tasks/:name', access, async (req, res) => {
     const updateError = await Task
-        .validate(req.body)
+        .validate(req.body, ['name'])
         .catch(error => error);
 
-    console.log(updateError);
     if (updateError)
         return res.status(400).send({error: updateError});
 
     // some mongoose methods skip middleware like password hashing
     // Task.findOneAndUpdate({name: req.params.name}, req.body, {
 
-    Task.findOneAndUpdate({name: req.params.name}, req.body, {
+    Task.findOneAndUpdate({
+        name: req.params.name,
+        // reference to user in task model
+        user: req.user._id,
+    }, req.body, {
         // return updated user instead original
         new: true,
         // ensure updated user matches original schema
@@ -75,19 +95,21 @@ router.patch('/tasks/:name', async (req, res) => {
     });
 });
 
-router.delete('/tasks/:name', (req, res) => {
-    Task.findOneAndDelete({name: req.params.name})
-        .then(task => {
-            if (!task)
-                return res.status(404).send();
+router.delete('/tasks/:name', access, (req, res) => {
+    Task.findOneAndDelete({
+        name: req.params.name,
+        // reference to user in task model
+        user: req.user._id,
+    }).then(task => {
+        if (!task)
+            return res.status(404).send();
 
-            res.status(204).json(task);
-        })
-        .catch(error => {
-            res
-                .status(500)
-                .send(error);
-        });
+        res.status(204).json(task);
+    }).catch(error => {
+        res
+            .status(500)
+            .send(error);
+    });
 });
 
 module.exports = router;

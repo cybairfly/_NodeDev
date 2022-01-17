@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const validator = require('validator').default;
 
+const Task = require('./task');
+
 // prepare in advance to enable hook injection
 const schema = new mongoose.Schema({
     username: {
@@ -60,6 +62,13 @@ schema.methods.toJSON = function () {
     return user;
 };
 
+// define relationship between user and task
+schema.virtual('tasks', {
+    ref: Task,
+    localField: '_id',
+    foreignField: 'user',
+});
+
 schema.statics.findByCredentials = async (username, password) => {
     const user = await User.findOne({ username });
     if (!user)
@@ -100,6 +109,14 @@ schema.pre([
         console.log('hashing password');
         this.password = await bcrypt.hash(this.password, 10);
     }
+
+    next();
+});
+
+// remove tasks along with user removal
+schema.pre('remove', async next => {
+    // reference to user in task model
+    await Task.deleteMany({ user: this._id });
 
     next();
 });

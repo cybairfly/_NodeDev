@@ -170,7 +170,6 @@ router.delete('/users/me', access, (req, res) => {
     // const user = await User.findByIdAndDelete(req.user._id);
     req.user.remove()
         .then(user => {
-            console.log(user);
             if (!user)
                 return res.status(404).send();
 
