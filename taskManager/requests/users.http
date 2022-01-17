@@ -1,46 +1,57 @@
-### Users
-GET http://localhost:3000/users
+@host = http://localhost:3000
+@token = {{Login.response.body.token}}
 
-### Profile
-GET http://localhost:3000/users/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRvYmV5IiwiX2lkIjoiNjFiMGE0YTBkOTZjYzIyZGQxYmZlZmU0IiwiaWF0IjoxNjM4OTY2NTg1fQ.01CCtmOSwddcCVWabwITy0ykER0WJlnN7cmCYTvdvYk
+###
+# @name Users
+GET {{host}}/users
 
-### Remove
-DELETE  http://localhost:3000/users/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRvYmV5IiwiX2lkIjoiNjFiMGI2NjZkMjEzYjI4M2NlYTZlY2UwIiwiaWF0IjoxNjM4OTcwOTk4fQ.ii-d0OJjemrfsSkLJawzspHSJCqDE2ICk0FQ-Y7LSZE
+###
+# @name Profile
+GET {{host}}/users/me
+Authorization: Bearer {{token}}
 
-### Register
-POST http://localhost:3000/users
+###
+# @name Remove
+DELETE  {{host}}/users/me
+Authorization: Bearer {{token}}
+
+###
+# @name Register
+POST {{host}}/users
 Content-Type: application/json
 
 {
-    "username": "Tobey",
+    "username": "Tobeyz",
     "password": "passfork",
-    "mail": "test@test.com"
+    "mail": "test@test.comz"
 }
 
-### Update
-PATCH http://localhost:3000/users/me
+###
+# @name Update
+PATCH {{host}}/users/me
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRvYmV5IiwiX2lkIjoiNjFiMGI2YjFkMjEzYjI4M2NlYTZlZDAxIiwiaWF0IjoxNjM4OTcxMDYxfQ.f0Xig5XriArA5sh7uVcN10sdInfausOG1HuNgyxBqNY
+Authorization: Bearer {{token}}
 
 {
     "username": "Vasek"
 }
 
-### Login
-POST http://localhost:3000/users/login
+###
+# @name Login
+POST {{host}}/users/login
 Content-Type: application/json
 
 {
-    "username": "Vasek",
+    "username": "Tobey",
     "password": "passfork"
 }
 
-### Logout
-POST http://localhost:3000/users/logout
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRvYmV5IiwiX2lkIjoiNjFiMGE0YTBkOTZjYzIyZGQxYmZlZmU0IiwiaWF0IjoxNjM4OTY2NTg3fQ.GHQHOVt8JIbzDvXnhL0hLN-n1czvrst5PGEb-q8bycg
+###
+# @name Logout
+POST {{host}}/users/logout
+Authorization: Bearer {{token}}
 
-### Logout global
-POST http://localhost:3000/users/logoutGlobal
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRvYmV5IiwiX2lkIjoiNjFiMGE0YTBkOTZjYzIyZGQxYmZlZmU0IiwiaWF0IjoxNjM4OTY2NDkyfQ.rSaf9htRxeU2zxqhm8Co1qCg6Vc-psx4No1lceTeAYk
+###
+# @name Logout global
+POST {{host}}/users/logoutGlobal
+Authorization: Bearer {{token}}

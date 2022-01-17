@@ -1,0 +1,40 @@
+@host = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRvYmV5IiwiX2lkIjoiNjFiMjE5NjhjNzc1ZjU2OWYyMmM5ZWY1IiwiaWF0IjoxNjM5MDYyOTM1fQ.1kr9W7gJF-1piEhL9nKenNrBWnm7PWJhOD4lAaK2lj0
+
+
+
+###
+# @name Tasks
+GET {{host}}/tasks
+Authorization: Bearer {{token}}
+
+###
+# @name Task
+GET {{host}}/tasks/test
+Authorization: Bearer {{token}}
+
+###
+# @name Remove
+DELETE  {{host}}/tasks/test
+Authorization: Bearer {{token}}
+
+###
+# @name Create
+POST {{host}}/tasks
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "test"
+}
+
+###
+# @name Update
+PATCH {{host}}/tasks/test
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "test",
+    "done": true
+}
