@@ -1,0 +1,46 @@
+### Users
+GET http://localhost:3000/users
+
+### Profile
+GET http://localhost:3000/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRvYmV5IiwiX2lkIjoiNjFiMGE0YTBkOTZjYzIyZGQxYmZlZmU0IiwiaWF0IjoxNjM4OTY2NTg1fQ.01CCtmOSwddcCVWabwITy0ykER0WJlnN7cmCYTvdvYk
+
+### Remove
+DELETE  http://localhost:3000/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRvYmV5IiwiX2lkIjoiNjFiMGI2NjZkMjEzYjI4M2NlYTZlY2UwIiwiaWF0IjoxNjM4OTcwOTk4fQ.ii-d0OJjemrfsSkLJawzspHSJCqDE2ICk0FQ-Y7LSZE
+
+### Register
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+    "username": "Tobey",
+    "password": "passfork",
+    "mail": "test@test.com"
+}
+
+### Update
+PATCH http://localhost:3000/users/me
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRvYmV5IiwiX2lkIjoiNjFiMGI2YjFkMjEzYjI4M2NlYTZlZDAxIiwiaWF0IjoxNjM4OTcxMDYxfQ.f0Xig5XriArA5sh7uVcN10sdInfausOG1HuNgyxBqNY
+
+{
+    "username": "Vasek"
+}
+
+### Login
+POST http://localhost:3000/users/login
+Content-Type: application/json
+
+{
+    "username": "Vasek",
+    "password": "passfork"
+}
+
+### Logout
+POST http://localhost:3000/users/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRvYmV5IiwiX2lkIjoiNjFiMGE0YTBkOTZjYzIyZGQxYmZlZmU0IiwiaWF0IjoxNjM4OTY2NTg3fQ.GHQHOVt8JIbzDvXnhL0hLN-n1czvrst5PGEb-q8bycg
+
+### Logout global
+POST http://localhost:3000/users/logoutGlobal
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRvYmV5IiwiX2lkIjoiNjFiMGE0YTBkOTZjYzIyZGQxYmZlZmU0IiwiaWF0IjoxNjM4OTY2NDkyfQ.rSaf9htRxeU2zxqhm8Co1qCg6Vc-psx4No1lceTeAYk
