@@ -49,6 +49,17 @@ const schema = new mongoose.Schema({
     }],
 });
 
+// utilize serializer instead of manual filter hook injection
+// schema.methods.getPublicProfile = function () {
+schema.methods.toJSON = function () {
+    const user = this.toObject();
+
+    delete user.password;
+    delete user.tokens;
+
+    return user;
+};
+
 schema.statics.findByCredentials = async (username, password) => {
     const user = await User.findOne({ username });
     if (!user)
@@ -70,7 +81,7 @@ schema.methods.generateAuthToken = async function () {
     // add token to tokens array to allow multiple tokens per user
     // new token must be an object as per schema!
     // this.tokens = {...this.tokens, token};
-    this.tokens = [...this.tokens, {token}];
+    this.tokens = [...this.tokens, { token }];
 
     await this.updateOne({ tokens: this.tokens });
 
@@ -85,8 +96,10 @@ schema.pre([
     // 'findOneAndUpdate',
 ], async function (next) {
     // this = model || model.Query - depending on operation - not request input
-    if (this.password || (this.isModified && this.isModified('password')))
+    if (this.password || (this.isModified && this.isModified('password'))) {
+        console.log('hashing password');
         this.password = await bcrypt.hash(this.password, 10);
+    }
 
     next();
 });

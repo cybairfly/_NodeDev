@@ -89,7 +89,28 @@ router.post('/users/logoutGlobal', access, async (req, res) => {
     res.send('Logout success for all tokens');
 });
 
-router.patch('/users/:name', async (req, res) => {
+router.patch('/users/me', access, async (req, res) => {
+    // custom validation
+    const currentUpdates = Object.keys(req.body);
+    const allowedUpdates = ['username', 'password', 'mail', 'age'];
+    const isValidUpdate = currentUpdates.every(update => allowedUpdates.includes(update));
+
+    if (!isValidUpdate)
+        return res.status(400).send({error: 'Invalid updates!'});
+
+    const {user} = req;
+    currentUpdates.forEach(item => user[item] = req.body[item]);
+
+    if (currentUpdates.includes('password')) {
+    // autorun password hashing on save
+        await user.save();
+    } else
+        await user.updateOne(req.body);
+
+    res.send(user);
+});
+
+router.patch('/users/other/:name', async (req, res) => {
     // custom validation
     const currentUpdates = Object.keys(req.body);
     const allowedUpdates = ['username', 'password', 'mail', 'age'];
@@ -130,9 +151,26 @@ router.patch('/users/:name', async (req, res) => {
         });
 });
 
-router.delete('/users/:name', (req, res) => {
+router.delete('/users/other/:name', (req, res) => {
     User.findOneAndDelete({username: req.params.name})
         .then(user => {
+            if (!user)
+                return res.status(404).send();
+
+            res.status(204).json(user);
+        })
+        .catch(error => {
+            res
+                .status(500)
+                .send(error);
+        });
+});
+
+router.delete('/users/me', access, (req, res) => {
+    // const user = await User.findByIdAndDelete(req.user._id);
+    req.user.remove()
+        .then(user => {
+            console.log(user);
             if (!user)
                 return res.status(404).send();
 
