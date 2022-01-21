@@ -106,7 +106,7 @@ schema.pre([
 ], async function (next) {
     // this = model || model.Query - depending on operation - not request input
     if (this.password || (this.isModified && this.isModified('password'))) {
-        console.log('hashing password');
+        // console.log('hashing password');
         this.password = await bcrypt.hash(this.password, 10);
     }
 
