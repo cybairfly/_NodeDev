@@ -24,12 +24,12 @@ const testUsers = [
 }));
 
 const initializeDatabase = async () => {
-    await Promise.all(testUsers.map(async user => {
-        await User.deleteMany({});
-        await User.create(user);
-        // alternative
-        // await new User(testUser).save();
-    }));
+    await User.deleteMany({});
+    await Promise.all(testUsers
+        .map(async user =>
+            User.create(user)));
+    // alternative
+    // await new User(testUser).save();
 };
 
 module.exports = {
