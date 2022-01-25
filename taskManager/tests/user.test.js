@@ -3,7 +3,10 @@ global.isTest = true;
 const request = require('supertest');
 const app = require('../app/app');
 const User = require('../app/models/user');
-const {testUser, testUserId, initializeDatabase} = require('./fixtures/db');
+const {testUsers, initializeDatabase} = require('./fixtures/db');
+
+const [testUser] = testUsers;
+const {_id: testUserId} = testUser;
 
 beforeEach(initializeDatabase);
 
